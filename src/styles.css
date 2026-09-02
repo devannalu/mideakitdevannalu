@@ -263,6 +263,8 @@ header nav a.active:after{transform:scaleX(1)}
 .metric-hero span{font-size:.65rem;text-transform:uppercase;letter-spacing:.14em}
 .metric-hero strong{font:clamp(5rem,14vw,14rem) Italiana;line-height:.75}
 .metric-hero>div+div strong{font-size:clamp(3rem,7vw,7rem)}
+.metric-hero>div+div strong{line-height:.92;margin-bottom:.65rem}
+.metric-hero>div+div p{margin:0;line-height:1.35}
 .metric-hero strong small{font-size:.25em}
 .metric-hero p{text-transform:uppercase;letter-spacing:.15em;font-size:.65rem;opacity:.6}
 .charts{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-top:4rem}
