@@ -610,8 +610,6 @@ to{opacity:1;transform:translateY(0)}
 .contact-socials{display:flex;flex-wrap:wrap;gap:1.1rem;margin-top:1.35rem}
 .contact-socials a{font:600 .55rem 'DM Sans',sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.58;transition:opacity .3s}
 .contact-socials a:hover,.contact-socials a:focus-visible{opacity:1}
-.contact-tech{display:flex;align-items:center;gap:.75rem;margin-top:clamp(2.25rem,4vw,4rem);font:500 .52rem ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.13em;color:#F6F3E4;opacity:.38}
-.contact-tech i{display:block;width:clamp(45px,7vw,100px);height:1px;background:#4D0C12}
 .contact-cherry{position:absolute;z-index:-1;right:-4vw;bottom:-7vw;width:clamp(180px,24vw,360px);height:auto;object-fit:contain;opacity:.13;transform:rotate(10deg)}
 .contact form{align-self:center;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.15rem,2vh,1.7rem) 1.5rem;animation:contact-right .65s .12s both ease-out}
 .contact form label{position:relative;display:grid;align-content:start;gap:.35rem;font:600 .58rem 'DM Sans',sans-serif;letter-spacing:.15em;text-transform:uppercase;color:#F6F3E4}
@@ -627,14 +625,14 @@ to{opacity:1;transform:translateY(0)}
 .contact select{appearance:none;-webkit-appearance:none;padding-right:2rem;cursor:pointer}
 .contact select option{background:#1E100F;color:#F6F3E4}
 .contact .formactions{display:flex;align-items:center;gap:1.4rem;margin-top:.35rem}
-.contact .formactions button{font:600 .6rem 'DM Sans',sans-serif;letter-spacing:.13em}
-.contact .formactions .button{width:auto;min-height:auto;padding:.95rem 1.25rem;border:1px solid #F6F3E4;border-radius:0;background:#F6F3E4;color:#1E100F}
-.whatsapp-link{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 0;border:0;border-bottom:1px solid #4D0C12;background:transparent;color:#F6F3E4;cursor:pointer}
-.whatsapp-link svg{width:14px;height:14px;transition:transform .3s}
-.whatsapp-link:hover svg,.whatsapp-link:focus-visible svg{transform:translateX(4px)}
+.contact-action{position:relative;display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 0;border:0;background:transparent;color:#F6F3E4;font:600 .6rem 'DM Sans',sans-serif;letter-spacing:.13em;cursor:pointer}
+.contact-action:after{content:'';position:absolute;left:0;bottom:0;width:100%;height:1px;background:#4D0C12;transform:scaleX(.72);transform-origin:left;transition:transform .3s ease}
+.contact-action svg{width:14px;height:14px;transition:transform .3s ease}
+.contact-action:hover:after,.contact-action:focus-visible:after{transform:scaleX(1)}
+.contact-action:hover svg,.contact-action:focus-visible svg{transform:translateX(4px)}
 @keyframes contact-left{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
 @keyframes contact-right{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
 
 @media(max-width:900px){.contact{min-height:auto;grid-template-columns:1fr;align-items:start;gap:3.5rem}.contact h2{max-width:720px}.contact form{width:100%;max-width:720px}}
-@media(max-width:600px){.contact{padding:5.5rem 1.2rem 4rem;gap:3rem}.contact h2{font-size:clamp(3rem,14vw,4.6rem)}.contact-copy>p{font-size:.82rem;margin-top:1.35rem}.contact-direct{align-items:flex-start;flex-direction:column;gap:.7rem}.contact form{grid-template-columns:1fr;gap:1.25rem}.contact form label:nth-child(n),.contact .formactions{grid-column:1}.contact .formactions{align-items:stretch;flex-direction:column;gap:.8rem}.contact .formactions .button,.whatsapp-link{width:100%;justify-content:center}.contact-cherry{right:-28vw;bottom:-8vw;width:75vw;opacity:.09}.contact-tech{font-size:.46rem}}
-@media(prefers-reduced-motion:reduce){.contact-copy,.contact form{animation:none!important;opacity:1;transform:none}.whatsapp-link svg{transition:none}}
+@media(max-width:600px){.contact{padding:5.5rem 1.2rem 4rem;gap:3rem}.contact h2{font-size:clamp(3rem,14vw,4.6rem)}.contact-copy>p{font-size:.82rem;margin-top:1.35rem}.contact-direct{align-items:flex-start;flex-direction:column;gap:.7rem}.contact form{grid-template-columns:1fr;gap:1.25rem}.contact form label:nth-child(n),.contact .formactions{grid-column:1}.contact .formactions{align-items:flex-start;flex-direction:column;gap:.8rem}.contact-action{width:auto}.contact-cherry{right:-28vw;bottom:-8vw;width:75vw;opacity:.09}}
+@media(prefers-reduced-motion:reduce){.contact-copy,.contact form{animation:none!important;opacity:1;transform:none}.contact-action:after,.contact-action svg{transition:none}}
