@@ -757,9 +757,13 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
-  const [type, setType] = useState("");
+  const [typeIndex, setTypeIndex] = useState<number | null>(null);
+  const [typeOpen, setTypeOpen] = useState(false);
+  const [typeHighlight, setTypeHighlight] = useState(0);
   const [msg, setMsg] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const typeWrapRef = useRef<HTMLSpanElement>(null);
+  const typeButtonRef = useRef<HTMLButtonElement>(null);
   const pt = lang === "pt";
   const types = pt
     ? [
@@ -784,6 +788,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
         "Tech Sisters partnership",
         "Custom project",
       ];
+  const type = typeIndex === null ? "" : types[typeIndex];
   const copy = pt
     ? {
         name: "Nome",
@@ -817,6 +822,40 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
         emailButton: "PREPARE EMAIL",
         whatsappButton: "SEND VIA WHATSAPP",
       };
+  useEffect(() => {
+    const closeOutside = (event: PointerEvent) => {
+      if (!typeWrapRef.current?.contains(event.target as Node)) setTypeOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    return () => document.removeEventListener("pointerdown", closeOutside);
+  }, []);
+  const chooseType = (index: number) => {
+    setTypeIndex(index);
+    setTypeHighlight(index);
+    setTypeOpen(false);
+    setErrors((value) => ({ ...value, type: "" }));
+    requestAnimationFrame(() => typeButtonRef.current?.focus());
+  };
+  const handleTypeKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setTypeOpen(false);
+      return;
+    }
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const direction = event.key === "ArrowDown" ? 1 : -1;
+      setTypeOpen(true);
+      setTypeHighlight((current) =>
+        (current + direction + types.length) % types.length,
+      );
+      return;
+    }
+    if (typeOpen && (event.key === "Enter" || event.key === " ")) {
+      event.preventDefault();
+      chooseType(typeHighlight);
+    }
+  };
   const validate = () => {
     const next: Record<string, string> = {};
     if (!name.trim()) next.name = copy.required;
@@ -919,24 +958,54 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
         </label>
         <label>
           {copy.type} *
-          <span className="select-wrap">
-            <select
-              value={type}
+          <span className="proposal-select" ref={typeWrapRef}>
+            <button
+              ref={typeButtonRef}
+              className="proposal-trigger"
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded={typeOpen}
+              aria-controls="proposal-options"
+              aria-activedescendant={
+                typeOpen ? `proposal-option-${typeHighlight}` : undefined
+              }
               aria-invalid={!!errors.type}
-              onChange={(e) => {
-                setType(e.target.value);
-                setErrors((v) => ({ ...v, type: "" }));
+              onClick={() => {
+                setTypeHighlight(typeIndex ?? 0);
+                setTypeOpen((open) => !open);
               }}
+              onKeyDown={handleTypeKeyDown}
             >
-              <option value="" disabled>
-                {copy.typePh}
-              </option>
-              {types.map((x) => (
-                <option key={x} value={x}>
-                  {x}
-                </option>
-              ))}
-            </select>
+              <span className={type ? "" : "proposal-placeholder"}>
+                {type || copy.typePh}
+              </span>
+              <span className="proposal-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <input type="hidden" name="proposalType" value={type} />
+            {typeOpen && (
+              <span
+                className="proposal-list"
+                id="proposal-options"
+                role="listbox"
+                aria-label={copy.type}
+              >
+                {types.map((option, index) => (
+                  <button
+                    id={`proposal-option-${index}`}
+                    className={index === typeHighlight ? "is-highlighted" : ""}
+                    type="button"
+                    role="option"
+                    aria-selected={typeIndex === index}
+                    key={option}
+                    onPointerEnter={() => setTypeHighlight(index)}
+                    onClick={() => chooseType(index)}
+                  >
+                    <span>{typeIndex === index ? "→" : ""}</span>
+                    {option}
+                  </button>
+                ))}
+              </span>
+            )}
           </span>
           {errors.type && <small>{errors.type}</small>}
         </label>

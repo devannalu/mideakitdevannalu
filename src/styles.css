@@ -605,16 +605,27 @@ to{opacity:1;transform:translateY(0)}
 .contact form{align-self:center;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.15rem,2vh,1.7rem) 1.5rem;animation:contact-right .65s .12s both ease-out}
 .contact form label{position:relative;display:grid;align-content:start;gap:.35rem;font:600 .58rem 'DM Sans',sans-serif;letter-spacing:.15em;text-transform:uppercase;color:#F6F3E4}
 .contact form label:nth-child(3),.contact form label:nth-child(4),.contact form label:nth-child(5),.contact .formactions{grid-column:1/-1}
-.contact input,.contact select,.contact textarea{width:100%;min-height:48px;padding:.75rem 0;border:0;border-bottom:1px solid #4D0C12;border-radius:0;background:transparent;color:#F6F3E4;font:400 .86rem 'DM Sans',sans-serif;letter-spacing:0;text-transform:none;outline:0;transition:border-color .3s ease,box-shadow .3s ease}
+.contact input,.contact textarea{width:100%;min-height:48px;padding:.75rem 0;border:0;border-bottom:1px solid #4D0C12;border-radius:0;background:transparent;color:#F6F3E4;font:400 .86rem 'DM Sans',sans-serif;letter-spacing:0;text-transform:none;outline:0;transition:border-color .3s ease,box-shadow .3s ease}
 .contact textarea{min-height:104px;max-height:190px;resize:vertical;padding-top:.85rem}
 .contact input::placeholder,.contact textarea::placeholder{color:rgba(246,243,228,.36)}
-.contact input:focus,.contact select:focus,.contact textarea:focus{border-color:#F6F3E4;box-shadow:inset 0 -1px 0 #F6F3E4}
+.contact input:focus,.contact textarea:focus{border-color:#F6F3E4;box-shadow:inset 0 -1px 0 #F6F3E4}
 .contact [aria-invalid=true]{border-color:#F6F3E4}
 .contact label>small{font:500 .52rem 'DM Sans',sans-serif;letter-spacing:.03em;text-transform:none;color:#F6F3E4;opacity:.78}
-.select-wrap{position:relative;display:block}
-.select-wrap:after{content:'⌄';position:absolute;right:.15rem;top:50%;transform:translateY(-55%);font-size:1rem;color:#F6F3E4;pointer-events:none}
-.contact select{appearance:none;-webkit-appearance:none;padding-right:2rem;cursor:pointer}
-.contact select option{background:#1E100F;color:#F6F3E4}
+.contact form label:nth-child(4){z-index:30}
+.proposal-select{position:relative;display:block;width:100%;z-index:30;text-transform:none;letter-spacing:0}
+.proposal-trigger{width:100%;min-height:48px;padding:.75rem 0;border:0;border-bottom:1px solid #4D0C12;border-radius:0;background:transparent;color:#F6F3E4;display:flex;align-items:center;justify-content:space-between;gap:1rem;text-align:left;font:400 .86rem 'DM Sans',sans-serif;cursor:pointer;outline:0;transition:border-color .3s ease,box-shadow .3s ease}
+.proposal-trigger:hover,.proposal-trigger:focus-visible,.proposal-trigger[aria-expanded=true]{border-color:#F6F3E4;box-shadow:inset 0 -1px 0 #F6F3E4}
+.proposal-trigger:focus-visible{outline:1px solid #F6F3E4;outline-offset:4px}
+.proposal-placeholder{color:rgba(246,243,228,.36)}
+.proposal-chevron{flex:none;font-size:1rem;line-height:1;transition:transform .2s ease}
+.proposal-trigger[aria-expanded=true] .proposal-chevron{transform:rotate(180deg)}
+.proposal-list{position:absolute;z-index:40;top:calc(100% + 5px);left:0;width:100%;max-height:310px;overflow-y:auto;overscroll-behavior:contain;padding:.35rem;background:#30050E;border:1px solid #4D0C12;box-shadow:0 10px 24px rgba(77,12,18,.22);animation:proposal-open .2s ease both;scrollbar-width:thin;scrollbar-color:#4D0C12 #30050E}
+.proposal-list button{width:100%;min-height:44px;padding:12px .75rem;border:0;border-bottom:1px solid rgba(246,243,228,.08);border-radius:0;background:transparent;color:#F6F3E4;display:flex;align-items:center;gap:.25rem;text-align:left;font:400 .82rem 'DM Sans',sans-serif;cursor:pointer;outline:0;transition:background-color .3s ease,padding-left .3s ease}
+.proposal-list button:last-child{border-bottom:0}
+.proposal-list button>span{width:1rem;flex:none}
+.proposal-list button:hover,.proposal-list button:focus-visible,.proposal-list button.is-highlighted,.proposal-list button[aria-selected=true]{background:#4D0C12;padding-left:1rem;color:#F6F3E4}
+.proposal-list button:focus-visible{outline:1px solid #F6F3E4;outline-offset:-2px}
+@keyframes proposal-open{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .contact .formactions{display:flex;align-items:center;gap:1.4rem;margin-top:.35rem}
 .contact-action{position:relative;display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 0;border:0;background:transparent;color:#F6F3E4;font:600 .6rem 'DM Sans',sans-serif;letter-spacing:.13em;cursor:pointer}
 .contact-action:after{content:'';position:absolute;left:0;bottom:0;width:100%;height:1px;background:#4D0C12;transform:scaleX(.72);transform-origin:left;transition:transform .3s ease}
@@ -626,7 +637,7 @@ to{opacity:1;transform:translateY(0)}
 
 @media(max-width:900px){.contact{min-height:auto;grid-template-columns:1fr;align-items:start;gap:3.5rem}.contact h2{max-width:720px}.contact form{width:100%;max-width:720px}}
 @media(max-width:600px){.contact{padding:5.5rem 1.2rem 4rem;gap:3rem}.contact h2{font-size:clamp(3rem,14vw,4.6rem)}.contact-copy>p{font-size:.82rem;margin-top:1.35rem}.contact-direct{align-items:flex-start;flex-direction:column;gap:.7rem}.contact form{grid-template-columns:1fr;gap:1.25rem}.contact form label:nth-child(n),.contact .formactions{grid-column:1}.contact .formactions{align-items:flex-start;flex-direction:column;gap:.8rem}.contact-action{width:auto}.contact-cherry{right:-28vw;bottom:-8vw;width:75vw;opacity:.09}}
-@media(prefers-reduced-motion:reduce){.contact-copy,.contact form{animation:none!important;opacity:1;transform:none}.contact-action:after,.contact-action svg{transition:none}}
+@media(prefers-reduced-motion:reduce){.contact-copy,.contact form{animation:none!important;opacity:1;transform:none}.contact-action:after,.contact-action svg,.proposal-trigger,.proposal-chevron,.proposal-list,.proposal-list button{transition:none;animation:none}}
 
 /* Selected work — real vertical covers. */
 .reel-cover{position:relative;width:100%;height:100%;padding:0;border:0;background:#30050E;display:block;overflow:hidden;cursor:pointer}
