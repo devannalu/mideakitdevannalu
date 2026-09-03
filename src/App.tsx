@@ -1,13 +1,971 @@
-import{useEffect,useRef,useState}from'react';import{ArrowDown,ArrowLeft,ArrowRight,ArrowUp,BookOpen,BriefcaseBusiness,Camera,Code2,Cpu,ExternalLink,GitFork,Mail,Menu,MessageCircle,Music,Music2,Play,Sparkles,Tv,Users,X}from'lucide-react';import{profile,socials,projects,i18n}from'./data';
-const A=({href,children,className=''}:{href:string,children:React.ReactNode,className?:string})=><a className={className} href={href} target={href.startsWith('http')?'_blank':undefined} rel={href.startsWith('http')?'noopener noreferrer':undefined}>{children}</a>;
-export default function App(){const[lang,setLang]=useState<'pt'|'en'>('pt');const[menu,setMenu]=useState(false);const[active,setActive]=useState(0);const[dragStart,setDragStart]=useState<number|null>(null);const[activeNav,setActiveNav]=useState('sobre');const openingRef=useRef<HTMLElement>(null);const t=i18n[lang];const move=(dir:number)=>setActive(i=>(i+dir+projects.length)%projects.length);useEffect(()=>{document.documentElement.lang=lang==='pt'?'pt-BR':'en'},[lang]);useEffect(()=>{const observer=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&setActiveNav(e.target.id)),{rootMargin:'-25% 0px -65%'});document.querySelectorAll('section[id]').forEach(s=>observer.observe(s));return()=>observer.disconnect()},[]);useEffect(()=>{const node=openingRef.current;if(!node)return;let frame=0;const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;const update=()=>{frame=0;const total=node.offsetHeight-innerHeight;const progress=reduced?1:Math.min(1,Math.max(0,(scrollY-node.offsetTop)/total));node.style.setProperty('--reveal',String(progress))};const onScroll=()=>{if(!frame)frame=requestAnimationFrame(update)};update();addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);return()=>{removeEventListener('scroll',onScroll);removeEventListener('resize',onScroll);if(frame)cancelAnimationFrame(frame)}},[]);
-return <><header><a className="brand" href="#sobre">DA<span>✦</span></a><nav className={menu?'open':''}>{t.nav.map((n,i)=>{const id=['sobre','conteudo','trabalhos','parcerias','contato'][i];return <a className={activeNav===id?'active':''} key={n} onClick={()=>setMenu(false)} href={'#'+id}>{n}</a>})}</nav><div className="tools"><button onClick={()=>setLang(lang==='pt'?'en':'pt')} aria-label="Alternar idioma">{lang.toUpperCase()}</button><button className="menub" onClick={()=>setMenu(!menu)} aria-label="Abrir menu">{menu?<X/>:<Menu/>}</button></div></header>
-<main><section id="sobre" className="opening" ref={openingRef}><div className="opening-sticky"><div className="hero"><img className="hero-watermark" src="/elementos/cereja-dev-annalu-transparente.png" alt="" aria-hidden="true"/><div className="hero-grid"><div className="hero-intro">01 — INTRO</div><div className="eyebrow">Software Engineer · Content Creator · Community Builder</div><h1>Dev <span>Annalu<img className="hero-cherry" src="/elementos/cereja-dev-annalu-transparente.png" alt=""/></span></h1><p className="hero-lead">{t.hero}</p><p className="hero-description">{t.support}</p><div className="actions"><a className="button" href="#contato">{t.cta}</a><a className="textlink" href="#trabalhos">{t.work} <ArrowDown/></a></div><figure className="hero-media"><div className="hero-photo hero-cutout"><img src="/assets/annalu-hero-cutout-v2.png" alt="Dev Annalu"/></div><figcaption>SUA TECH BESTIE · SALVADOR, BAHIA</figcaption><div className="personal-notes"><span><Music/> música</span><span><BookOpen/> livros</span><span><Tv/> séries</span></div></figure><div className="hero-tech" aria-hidden="true"><span>&lt;/&gt;</span><span>{'{ }'}</span><span>JAVA</span><span>BACKEND</span><span>AI</span><i/></div><div className="hero-scroll">SCROLL TO DISCOVER <ArrowDown/></div></div></div><div className="opening-cover" aria-hidden="true"><div className="curtain curtain-left"/><div className="curtain curtain-right"/><div className="opening-title"><h2>Dev Annalu</h2><p>Software Engineer · Content Creator · Community Builder</p><span>Scroll down <ArrowDown/></span></div></div></div></section>
-<section id="conteudo" className="pillars"><div className="section-label">02 — Pilares de conteúdo</div><h2>O que faz parte<br/><em>da conversa.</em></h2><div className="pillar-editorial"><article className="pillar-block pillar-tech"><small>01</small><Code2 aria-hidden="true"/><span className="pillar-code" aria-hidden="true">&lt;/backend&gt;</span><h3>Tecnologia &amp;<br/>desenvolvimento</h3><p>Backend, Java e soluções digitais.</p></article><article className="pillar-block pillar-career"><small>02</small><BriefcaseBusiness aria-hidden="true"/><span className="pillar-code" aria-hidden="true">git:journey</span><h3>Carreira &amp;<br/>rotina real</h3><p>Os bastidores da jornada tech.</p></article><article className="pillar-block pillar-ai"><small>03</small><Cpu aria-hidden="true"/><span className="pillar-code" aria-hidden="true">model.init()</span><h3>Inteligência<br/>artificial</h3><p>Inovação explicada sem distância.</p></article><article className="pillar-block pillar-community"><small>04</small><Users aria-hidden="true"/><span className="pillar-code" aria-hidden="true">network://live</span><h3>Eventos &amp;<br/>comunidade</h3><p>Conexões dentro do ecossistema tech.</p></article><article className="pillar-block pillar-lifestyle"><small>05</small><Sparkles aria-hidden="true"/><img className="pillar-cherry" src="/elementos/cerejas.png" alt=""/><span className="pillar-code" aria-hidden="true">life.exe</span><h3>Lifestyle &amp;<br/>beleza</h3><p>Personalidade além do código.</p></article><article className="pillar-block pillar-culture"><small>06</small><BookOpen aria-hidden="true"/><span className="pillar-code" aria-hidden="true">read — watch — plan</span><h3>Livros, séries &amp;<br/>organização</h3><p>Referências, rotina e descobertas.</p></article></div></section>
-<section className="performance" aria-labelledby="metrics-title"><div className="section-label">04 — Audiência & performance</div><div className="metric-hero"><div><span>Instagram · 30 dias</span><strong id="metrics-title">89,2<small>mil</small></strong><p>visualizações</p></div><div><strong>2.647</strong><p>interações</p></div></div><div className="charts"><article className="donut-card"><div className="donut" role="img" aria-label="Audiência: 41,4% mulheres e 58,6% homens"><span>41,4<small>%</small></span></div><div><b>Gênero</b><p><i/>41,4% mulheres</p><p><i/>58,6% homens</p></div></article><article className="ages"><b>Faixa etária</b>{[['18–24',39],['25–34',40.6],['35–44',13.7],['45–54',5]].map(x=><div><span>{x[0]}</span><i style={{'--value':x[1]+'%'} as React.CSSProperties}/><strong>{String(x[1]).replace('.',',')}%</strong></div>)}</article><article className="reach"><div className="arc"><strong>67,7%</strong></div><p>fora da base atual</p></article><article className="growth"><b>Crescimento · +18,9%</b><svg viewBox="0 0 300 100" role="img" aria-label="Linha ascendente representando crescimento de 18,9%"><path d="M4 86 C54 80 65 68 100 71 S145 45 180 50 S235 18 296 12"/></svg><span>+164 seguidores líquidos</span></article></div><div className="platforms"><p><b>Instagram</b><span>1.030 seguidores · 53 mil posts · 28 mil Stories · 8,5 mil Reels</span></p><p><b>TikTok</b><span>7.589 seguidores · 174,7 mil curtidas</span></p><p><b>YouTube</b><span>60 inscritos · canal em crescimento</span></p></div></section>
-<section id="trabalhos" className="work"><div className="section-label">05 — Trabalhos selecionados</div><div className="workhead"><div><h2>Conteúdo que transforma<br/><em>experiências em histórias.</em></h2><p>Explore alguns dos conteúdos, eventos e projetos que já ganharam vida.</p></div><span className="counter">{String(active+1).padStart(2,'0')} / {String(projects.length).padStart(2,'0')}</span></div><div className="video-stage" role="region" aria-label="Carrossel de conteúdos" tabIndex={0} onKeyDown={e=>{if(e.key==='ArrowLeft')move(-1);if(e.key==='ArrowRight')move(1)}} onPointerDown={e=>setDragStart(e.clientX)} onPointerUp={e=>{if(dragStart!==null&&Math.abs(e.clientX-dragStart)>45)move(e.clientX<dragStart?1:-1);setDragStart(null)}}><button className="stage-arrow prev" onClick={()=>move(-1)} aria-label="Conteúdo anterior"><ArrowLeft/></button><div className="card-deck">{projects.map((p,i)=>{let d=i-active;if(d>projects.length/2)d-=projects.length;if(d<-projects.length/2)d+=projects.length;const central=d===0;return <article className={'video-card '+(central?'active':Math.abs(d)===1?'neighbor':'hidden')} style={{'--offset':d} as React.CSSProperties} aria-hidden={Math.abs(d)>1} key={p.url}><button className="reel-cover" onClick={()=>central?window.open(p.url,'_blank','noopener,noreferrer'):setActive(i)} tabIndex={Math.abs(d)<=1?0:-1} aria-label={central?`Abrir ${p.title}`:`Selecionar ${p.title}`}><img src={p.cover} alt={`Capa de ${p.title}`}/></button></article>})}</div><button className="stage-arrow next" onClick={()=>move(1)} aria-label="Próximo conteúdo"><ArrowRight/></button></div><div className="active-meta" aria-live="polite"><div><h3>{projects[active].title}</h3><p>{String(active+1).padStart(2,'0')} — {projects[active].cat}</p></div><A className="reel-cta" href={projects[active].url}>Assistir ao conteúdo completo <ArrowRight/></A></div></section>
-<section id="parcerias" className="partnerships"><div className="section-label">07 — Serviços & formatos de parceria</div><h2>Sua marca dentro de uma conversa real.</h2><div className="partnership-deck" aria-label="Formatos de parceria"><article className="partnership-card card-social"><small>01</small><div className="card-tech tech-code" aria-hidden="true"><span>&lt;</span><i>/</i><span>&gt;</span></div><h3>Conteúdo social</h3><div className="card-details">Reels · TikTok · Stories · Feed</div><span className="card-arrow" aria-hidden="true">↗</span></article><article className="partnership-card card-brands"><small>02</small><div className="card-tech tech-signal" aria-hidden="true"><i/><i/><i/><i/><i/></div><h3>Conteúdo para marcas</h3><div className="card-details">UGC · Unboxing · Review · Conteúdo patrocinado</div><span className="card-arrow" aria-hidden="true">↗</span></article><article className="partnership-card card-events"><small>03</small><div className="card-tech tech-grid" aria-hidden="true"><i/><i/><i/><i/></div><h3>Eventos e presença</h3><div className="card-details">Cobertura · Entrevistas · Palestras</div><span className="card-arrow" aria-hidden="true">↗</span></article><article className="partnership-card card-special"><small>04</small><img className="partnership-cherry" src="/elementos/cerejas.png" alt=""/><div className="card-tech tech-cursor" aria-hidden="true">_</div><h3>Parcerias especiais</h3><div className="card-details">Embaixadora de marca · Projetos personalizados</div><span className="card-arrow" aria-hidden="true">↗</span></article></div><div className="partnership-cta"><span>Tem outra ideia?</span><a className="button" href="#contato">Vamos conversar</a></div></section>
-<section className="logos"><img className="partners-watermark" src="/elementos/cereja-dev-annalu-transparente.png" alt="" aria-hidden="true"/><div className="section-label">07 — PARCERIAS &amp; ECOSSISTEMA</div><div className="partners-heading"><h2>Boas ideias crescem<br/><em>quando encontram companhia.</em></h2><span aria-hidden="true">partnership.log</span></div><div className="partner-group"><div className="partner-group-head"><span>01</span><h3>MARCAS &amp; PARCEIROS</h3><i aria-hidden="true"/></div><div className="partner-row partner-brands"><figure><div><img loading="lazy" src="/logos/CasaDoCodigo.png" alt="Logo Casa do Código"/></div><figcaption><b>Casa do Código</b><span>parceria</span></figcaption></figure><figure><div><img loading="lazy" src="/logos/processadas/hostgator.png" alt="Logo HostGator"/></div><figcaption><b>HostGator</b><span>parceria</span></figcaption></figure><figure><div><img loading="lazy" src="/logos/processadas/estilodeti.png" alt="Logo Estilo de TI"/></div><figcaption><b>Estilo de TI</b><span>parceria</span></figcaption></figure><figure><div><img loading="lazy" src="/logos/processadas/aceleradev.png" alt="Logo Acelera Dev"/></div><figcaption><b>Acelera Dev</b><span>parceria</span></figcaption></figure><figure><div><img loading="lazy" src="/logos/processadas/nexupp.png" alt="Logo NEXUPP"/></div><figcaption><b>NEXUPP</b><span>parceria</span></figcaption></figure></div></div><div className="partner-group partner-community"><div className="partner-group-head"><span>02</span><h3>COMUNIDADES &amp; ECOSSISTEMA</h3><i aria-hidden="true"/></div><div className="partner-row partner-communities"><figure><div><img loading="lazy" src="/logos/processadas/lamit.png" alt="Logo LAMIT"/></div><figcaption><b>LAMIT</b><span>ecossistema</span></figcaption></figure><figure><div><img loading="lazy" src="/logos/techsisters-oficial-web.png" alt="Identidade visual oficial da Tech Sisters"/></div><figcaption><b>Tech Sisters</b><span>comunidade</span></figcaption></figure></div></div></section>
-<Contact lang={lang}/><Footer/></main></>}
-function Contact({lang}:{lang:'pt'|'en'}){const[name,setName]=useState('');const[company,setCompany]=useState('');const[email,setEmail]=useState('');const[type,setType]=useState('');const[msg,setMsg]=useState('');const[errors,setErrors]=useState<Record<string,string>>({});const pt=lang==='pt';const types=pt?['Campanha publicitária','Produção de conteúdo','UGC','Cobertura de evento','Palestra','Convite para evento','Embaixadora de marca','Parceria com a Tech Sisters','Projeto personalizado']:['Advertising campaign','Content production','UGC','Event coverage','Talk','Event invitation','Brand ambassador','Tech Sisters partnership','Custom project'];const copy=pt?{name:'Nome',company:'Empresa ou organização',email:'E-mail',type:'Tipo de proposta',message:'Mensagem',namePh:'Como você se chama?',companyPh:'Nome da marca ou organização',emailPh:'voce@empresa.com',typePh:'Selecione uma opção',messagePh:'Conte brevemente sobre a proposta',required:'Campo obrigatório',emailError:'Digite um e-mail válido',emailButton:'PREPARAR E-MAIL',whatsappButton:'ENVIAR POR WHATSAPP'}:{name:'Name',company:'Company or organization',email:'Email',type:'Proposal type',message:'Message',namePh:'What is your name?',companyPh:'Brand or organization name',emailPh:'you@company.com',typePh:'Choose an option',messagePh:'Tell me briefly about your proposal',required:'Required field',emailError:'Enter a valid email',emailButton:'PREPARE EMAIL',whatsappButton:'SEND VIA WHATSAPP'};const validate=()=>{const next:Record<string,string>={};if(!name.trim())next.name=copy.required;if(!email.trim())next.email=copy.required;else if(!/^\S+@\S+\.\S+$/.test(email))next.email=copy.emailError;if(!type)next.type=copy.required;if(!msg.trim())next.message=copy.required;setErrors(next);return Object.keys(next).length===0};const body=()=>encodeURIComponent(`${pt?'Olá':'Hello'}, ${pt?'sou':'I am'} ${name}${company?` — ${company}`:''}.\n\n${pt?'Tipo de proposta':'Proposal type'}: ${type}\nE-mail: ${email}\n\n${msg}`);const prepareEmail=()=>{if(validate())window.location.href=`mailto:${profile.email}?subject=${encodeURIComponent(`${pt?'Proposta de parceria':'Partnership proposal'} — ${type}`)}&body=${body()}`};const prepareWhatsapp=()=>{if(validate())window.open(`${profile.whatsapp}?text=${body()}`,'_blank','noopener,noreferrer')};return <section id="contato" className="contact"><div className="contact-copy"><div className="section-label">09 — {pt?'CONTATO':'CONTACT'}</div><h2>{pt?'Vamos criar algo':'Let’s create something'}<br/><em>{pt?'que vale a conversa?':'worth talking about?'}</em></h2><p>{pt?'Campanhas, eventos e projetos que conectam tecnologia, conteúdo e pessoas.':'Campaigns, events and projects connecting technology, content and people.'}</p><div className="contact-direct"><a href={`mailto:${profile.email}`}>{profile.email}</a><a href={profile.whatsapp} target="_blank" rel="noopener noreferrer">+55 75 98834-2908</a></div><div className="contact-socials">{socials.filter(s=>['Instagram','TikTok','LinkedIn','YouTube'].includes(s[0])).map(s=><A key={s[0]} href={s[1]}>{s[0]}</A>)}</div><img className="contact-cherry" src="/elementos/cereja-dev-annalu-transparente.png" alt="" aria-hidden="true"/></div><form noValidate onSubmit={e=>e.preventDefault()}><label>{copy.name} *<input value={name} placeholder={copy.namePh} aria-invalid={!!errors.name} onChange={e=>{setName(e.target.value);setErrors(v=>({...v,name:''}))}}/>{errors.name&&<small>{errors.name}</small>}</label><label>{copy.company}<input value={company} placeholder={copy.companyPh} onChange={e=>setCompany(e.target.value)}/></label><label>{copy.email} *<input type="email" value={email} placeholder={copy.emailPh} aria-invalid={!!errors.email} onChange={e=>{setEmail(e.target.value);setErrors(v=>({...v,email:''}))}}/>{errors.email&&<small>{errors.email}</small>}</label><label>{copy.type} *<span className="select-wrap"><select value={type} aria-invalid={!!errors.type} onChange={e=>{setType(e.target.value);setErrors(v=>({...v,type:''}))}}><option value="" disabled>{copy.typePh}</option>{types.map(x=><option key={x} value={x}>{x}</option>)}</select></span>{errors.type&&<small>{errors.type}</small>}</label><label>{copy.message} *<textarea value={msg} placeholder={copy.messagePh} aria-invalid={!!errors.message} onChange={e=>{setMsg(e.target.value);setErrors(v=>({...v,message:''}))}}/>{errors.message&&<small>{errors.message}</small>}</label><div className="formactions"><button className="contact-action" type="button" onClick={prepareEmail}>{copy.emailButton} <ArrowRight/></button><button className="contact-action" type="button" onClick={prepareWhatsapp}>{copy.whatsappButton} <ArrowRight/></button></div></form></section>}
-function Footer(){const icons=[<Camera/>,<Music2/>,<Play/>,<BriefcaseBusiness/>,<GitFork/>];return <footer><div className="footer-brand"><div><b>Dev Annalu</b><img src="/elementos/cerejas.png" alt="Cerejas"/></div><em>Sua tech bestie.</em><span>&lt;/&gt;</span></div><div className="footer-cta"><h3>Vamos criar juntas?</h3><a href="mailto:devannalu0@gmail.com"><Mail/>devannalu0@gmail.com</a><A href={profile.whatsapp}><MessageCircle/>WhatsApp</A></div><div className="footer-socials" aria-label="Redes sociais">{socials.filter(s=>s[0]!=='Tech Sisters').map((s,i)=><A href={s[1]} className="social-icon"><span className="sr-only">{s[0]}</span>{icons[i]}</A>)}</div><div className="footer-bottom"><span>Salvador, Bahia · Brasil</span><span>© 2026 Anna Luiza Cerqueira</span><a href="#sobre">Voltar ao topo <ArrowUp/></a></div></footer>}
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  BookOpen,
+  BriefcaseBusiness,
+  Camera,
+  Code2,
+  Cpu,
+  ExternalLink,
+  GitFork,
+  Mail,
+  Menu,
+  MessageCircle,
+  Music,
+  Music2,
+  Play,
+  Sparkles,
+  Tv,
+  Users,
+  X,
+} from "lucide-react";
+import { profile, socials, projects, i18n } from "./data";
+const A = ({
+  href,
+  children,
+  className = "",
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <a
+    className={className}
+    href={href}
+    target={href.startsWith("http") ? "_blank" : undefined}
+    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+  >
+    {children}
+  </a>
+);
+export default function App() {
+  const [lang, setLang] = useState<"pt" | "en">("pt");
+  const [menu, setMenu] = useState(false);
+  const [active, setActive] = useState(0);
+  const [dragStart, setDragStart] = useState<number | null>(null);
+  const [activeNav, setActiveNav] = useState("sobre");
+  const openingRef = useRef<HTMLElement>(null);
+  const t = i18n[lang];
+  const move = (dir: number) =>
+    setActive((i) => (i + dir + projects.length) % projects.length);
+  useEffect(() => {
+    document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
+  }, [lang]);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (es) => es.forEach((e) => e.isIntersecting && setActiveNav(e.target.id)),
+      { rootMargin: "-25% 0px -65%" },
+    );
+    document
+      .querySelectorAll("section[id]")
+      .forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    const node = openingRef.current;
+    if (!node) return;
+    let frame = 0;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const update = () => {
+      frame = 0;
+      const total = node.offsetHeight - innerHeight;
+      const progress = reduced
+        ? 1
+        : Math.min(1, Math.max(0, (scrollY - node.offsetTop) / total));
+      node.style.setProperty("--reveal", String(progress));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
+    return () => {
+      removeEventListener("scroll", onScroll);
+      removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+  return (
+    <>
+      <header>
+        <a className="brand" href="#sobre">
+          DA<span>✦</span>
+        </a>
+        <nav className={menu ? "open" : ""}>
+          {t.nav.map((n, i) => {
+            const id = [
+              "sobre",
+              "conteudo",
+              "trabalhos",
+              "parcerias",
+              "contato",
+            ][i];
+            return (
+              <a
+                className={activeNav === id ? "active" : ""}
+                key={n}
+                onClick={() => setMenu(false)}
+                href={"#" + id}
+              >
+                {n}
+              </a>
+            );
+          })}
+        </nav>
+        <div className="tools">
+          <button
+            onClick={() => setLang(lang === "pt" ? "en" : "pt")}
+            aria-label="Alternar idioma"
+          >
+            {lang.toUpperCase()}
+          </button>
+          <button
+            className="menub"
+            onClick={() => setMenu(!menu)}
+            aria-label="Abrir menu"
+          >
+            {menu ? <X /> : <Menu />}
+          </button>
+        </div>
+      </header>
+      <main>
+        <section id="sobre" className="opening" ref={openingRef}>
+          <div className="opening-sticky">
+            <div className="hero">
+              <img
+                className="hero-watermark"
+                src="/elementos/cereja-dev-annalu-transparente.png"
+                alt=""
+                aria-hidden="true"
+              />
+              <div className="hero-grid">
+                <div className="hero-intro">01 — INTRO</div>
+                <div className="eyebrow">
+                  Software Engineer · Content Creator · Community Builder
+                </div>
+                <h1>
+                  Dev{" "}
+                  <span>Annalu</span>
+                </h1>
+                <p className="hero-lead">{t.hero}</p>
+                <p className="hero-description">{t.support}</p>
+                <div className="actions">
+                  <a className="button" href="#contato">
+                    {t.cta}
+                  </a>
+                  <a className="textlink" href="#trabalhos">
+                    {t.work} <ArrowDown />
+                  </a>
+                </div>
+                <figure className="hero-media">
+                  <div className="hero-photo hero-cutout">
+                    <img
+                      src="/assets/annalu-hero-cutout-v2.png"
+                      alt="Dev Annalu"
+                    />
+                  </div>
+                  <figcaption>SUA TECH BESTIE · SALVADOR, BAHIA</figcaption>
+                  <div className="personal-notes">
+                    <span>
+                      <Music /> música
+                    </span>
+                    <span>
+                      <BookOpen /> livros
+                    </span>
+                    <span>
+                      <Tv /> séries
+                    </span>
+                  </div>
+                </figure>
+                <div className="hero-tech" aria-hidden="true">
+                  <span>&lt;/&gt;</span>
+                  <span>{"{ }"}</span>
+                  <span>JAVA</span>
+                  <span>BACKEND</span>
+                  <span>AI</span>
+                  <i />
+                </div>
+                <div className="hero-scroll">
+                  SCROLL TO DISCOVER <ArrowDown />
+                </div>
+              </div>
+            </div>
+            <div className="opening-cover" aria-hidden="true">
+              <div className="curtain curtain-left" />
+              <div className="curtain curtain-right" />
+              <div className="opening-title">
+                <h2>Dev Annalu</h2>
+                <p>Software Engineer · Content Creator · Community Builder</p>
+                <span>
+                  Scroll down <ArrowDown />
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="conteudo" className="pillars">
+          <div className="section-label">02 — Pilares de conteúdo</div>
+          <h2>
+            O que faz parte
+            <br />
+            <em>da conversa.</em>
+          </h2>
+          <div className="pillar-editorial">
+            <article className="pillar-block pillar-tech">
+              <small>01</small>
+              <Code2 aria-hidden="true" />
+              <span className="pillar-code" aria-hidden="true">
+                &lt;/backend&gt;
+              </span>
+              <h3>
+                Tecnologia &amp;
+                <br />
+                desenvolvimento
+              </h3>
+              <p>Backend, Java e soluções digitais.</p>
+            </article>
+            <article className="pillar-block pillar-career">
+              <small>02</small>
+              <BriefcaseBusiness aria-hidden="true" />
+              <span className="pillar-code" aria-hidden="true">
+                git:journey
+              </span>
+              <h3>
+                Carreira &amp;
+                <br />
+                rotina real
+              </h3>
+              <p>Os bastidores da jornada tech.</p>
+            </article>
+            <article className="pillar-block pillar-ai">
+              <small>03</small>
+              <Cpu aria-hidden="true" />
+              <span className="pillar-code" aria-hidden="true">
+                model.init()
+              </span>
+              <h3>
+                Inteligência
+                <br />
+                artificial
+              </h3>
+              <p>Inovação explicada sem distância.</p>
+            </article>
+            <article className="pillar-block pillar-community">
+              <small>04</small>
+              <Users aria-hidden="true" />
+              <span className="pillar-code" aria-hidden="true">
+                network://live
+              </span>
+              <h3>
+                Eventos &amp;
+                <br />
+                comunidade
+              </h3>
+              <p>Conexões dentro do ecossistema tech.</p>
+            </article>
+            <article className="pillar-block pillar-lifestyle">
+              <small>05</small>
+              <Sparkles aria-hidden="true" />
+              <img
+                className="pillar-cherry"
+                src="/elementos/cerejas.png"
+                alt=""
+              />
+              <span className="pillar-code" aria-hidden="true">
+                life.exe
+              </span>
+              <h3>
+                Lifestyle &amp;
+                <br />
+                beleza
+              </h3>
+              <p>Personalidade além do código.</p>
+            </article>
+            <article className="pillar-block pillar-culture">
+              <small>06</small>
+              <BookOpen aria-hidden="true" />
+              <span className="pillar-code" aria-hidden="true">
+                read — watch — plan
+              </span>
+              <h3>
+                Livros, séries &amp;
+                <br />
+                organização
+              </h3>
+              <p>Referências, rotina e descobertas.</p>
+            </article>
+          </div>
+        </section>
+        <section className="performance" aria-labelledby="metrics-title">
+          <div className="section-label">04 — Audiência & performance</div>
+          <div className="metric-hero">
+            <div>
+              <span>Instagram · 30 dias</span>
+              <strong id="metrics-title">
+                89,2<small>mil</small>
+              </strong>
+              <p>visualizações</p>
+            </div>
+            <div>
+              <strong>2.647</strong>
+              <p>interações</p>
+            </div>
+          </div>
+          <div className="charts">
+            <article className="donut-card">
+              <div
+                className="donut"
+                role="img"
+                aria-label="Audiência: 41,4% mulheres e 58,6% homens"
+              >
+                <span>
+                  41,4<small>%</small>
+                </span>
+              </div>
+              <div>
+                <b>Gênero</b>
+                <p>
+                  <i />
+                  41,4% mulheres
+                </p>
+                <p>
+                  <i />
+                  58,6% homens
+                </p>
+              </div>
+            </article>
+            <article className="ages">
+              <b>Faixa etária</b>
+              {[
+                ["18–24", 39],
+                ["25–34", 40.6],
+                ["35–44", 13.7],
+                ["45–54", 5],
+              ].map((x) => (
+                <div>
+                  <span>{x[0]}</span>
+                  <i style={{ "--value": x[1] + "%" } as React.CSSProperties} />
+                  <strong>{String(x[1]).replace(".", ",")}%</strong>
+                </div>
+              ))}
+            </article>
+            <article className="reach">
+              <div className="arc">
+                <strong>67,7%</strong>
+              </div>
+              <p>fora da base atual</p>
+            </article>
+            <article className="growth">
+              <b>Crescimento · +18,9%</b>
+              <svg
+                viewBox="0 0 300 100"
+                role="img"
+                aria-label="Linha ascendente representando crescimento de 18,9%"
+              >
+                <path d="M4 86 C54 80 65 68 100 71 S145 45 180 50 S235 18 296 12" />
+              </svg>
+              <span>+164 seguidores líquidos</span>
+            </article>
+          </div>
+          <div className="platforms">
+            <p>
+              <b>Instagram</b>
+              <span>
+                1.030 seguidores · 53 mil posts · 28 mil Stories · 8,5 mil Reels
+              </span>
+            </p>
+            <p>
+              <b>TikTok</b>
+              <span>7.589 seguidores · 174,7 mil curtidas</span>
+            </p>
+            <p>
+              <b>YouTube</b>
+              <span>60 inscritos · canal em crescimento</span>
+            </p>
+          </div>
+        </section>
+        <section id="trabalhos" className="work">
+          <div className="section-label">05 — Trabalhos selecionados</div>
+          <div className="workhead">
+            <div>
+              <h2>
+                Conteúdo que transforma
+                <br />
+                <em>experiências em histórias.</em>
+              </h2>
+              <p>
+                Explore alguns dos conteúdos, eventos e projetos que já ganharam
+                vida.
+              </p>
+            </div>
+            <span className="counter">
+              {String(active + 1).padStart(2, "0")} /{" "}
+              {String(projects.length).padStart(2, "0")}
+            </span>
+          </div>
+          <div
+            className="video-stage"
+            role="region"
+            aria-label="Carrossel de conteúdos"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowLeft") move(-1);
+              if (e.key === "ArrowRight") move(1);
+            }}
+            onPointerDown={(e) => setDragStart(e.clientX)}
+            onPointerUp={(e) => {
+              if (dragStart !== null && Math.abs(e.clientX - dragStart) > 45)
+                move(e.clientX < dragStart ? 1 : -1);
+              setDragStart(null);
+            }}
+          >
+            <button
+              className="stage-arrow prev"
+              onClick={() => move(-1)}
+              aria-label="Conteúdo anterior"
+            >
+              <ArrowLeft />
+            </button>
+            <div className="card-deck">
+              {projects.map((p, i) => {
+                let d = i - active;
+                if (d > projects.length / 2) d -= projects.length;
+                if (d < -projects.length / 2) d += projects.length;
+                const central = d === 0;
+                return (
+                  <article
+                    className={
+                      "video-card " +
+                      (central
+                        ? "active"
+                        : Math.abs(d) === 1
+                          ? "neighbor"
+                          : "hidden")
+                    }
+                    style={{ "--offset": d } as React.CSSProperties}
+                    aria-hidden={Math.abs(d) > 1}
+                    key={p.url}
+                  >
+                    <button
+                      className="reel-cover"
+                      onClick={() =>
+                        central
+                          ? window.open(p.url, "_blank", "noopener,noreferrer")
+                          : setActive(i)
+                      }
+                      tabIndex={Math.abs(d) <= 1 ? 0 : -1}
+                      aria-label={
+                        central ? `Abrir ${p.title}` : `Selecionar ${p.title}`
+                      }
+                    >
+                      <img src={p.cover} alt={`Capa de ${p.title}`} />
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+            <button
+              className="stage-arrow next"
+              onClick={() => move(1)}
+              aria-label="Próximo conteúdo"
+            >
+              <ArrowRight />
+            </button>
+          </div>
+          <div className="active-meta" aria-live="polite">
+            <div>
+              <h3>{projects[active].title}</h3>
+              <p>
+                {String(active + 1).padStart(2, "0")} — {projects[active].cat}
+              </p>
+            </div>
+            <A className="reel-cta" href={projects[active].url}>
+              Assistir ao conteúdo completo <ArrowRight />
+            </A>
+          </div>
+        </section>
+        <section id="parcerias" className="partnerships">
+          <div className="section-label">
+            07 — Serviços & formatos de parceria
+          </div>
+          <h2>Sua marca dentro de uma conversa real.</h2>
+          <div className="partnership-deck" aria-label="Formatos de parceria">
+            <article className="partnership-card card-social">
+              <small>01</small>
+              <div className="card-tech tech-code" aria-hidden="true">
+                <span>&lt;</span>
+                <i>/</i>
+                <span>&gt;</span>
+              </div>
+              <h3>Conteúdo social</h3>
+              <div className="card-details">
+                Reels · TikTok · Stories · Feed
+              </div>
+              <span className="card-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </article>
+            <article className="partnership-card card-brands">
+              <small>02</small>
+              <div className="card-tech tech-signal" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+                <i />
+                <i />
+              </div>
+              <h3>Conteúdo para marcas</h3>
+              <div className="card-details">
+                UGC · Unboxing · Review · Conteúdo patrocinado
+              </div>
+              <span className="card-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </article>
+            <article className="partnership-card card-events">
+              <small>03</small>
+              <div className="card-tech tech-grid" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+                <i />
+              </div>
+              <h3>Eventos e presença</h3>
+              <div className="card-details">
+                Cobertura · Entrevistas · Palestras
+              </div>
+              <span className="card-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </article>
+            <article className="partnership-card card-special">
+              <small>04</small>
+              <img
+                className="partnership-cherry"
+                src="/elementos/cerejas.png"
+                alt=""
+              />
+              <div className="card-tech tech-cursor" aria-hidden="true">
+                _
+              </div>
+              <h3>Parcerias especiais</h3>
+              <div className="card-details">
+                Embaixadora de marca · Projetos personalizados
+              </div>
+              <span className="card-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </article>
+          </div>
+          <div className="partnership-cta">
+            <span>Tem outra ideia?</span>
+            <a className="button" href="#contato">
+              Vamos conversar
+            </a>
+          </div>
+        </section>
+        <section className="logos">
+          <img
+            className="partners-watermark"
+            src="/elementos/cereja-dev-annalu-transparente.png"
+            alt=""
+            aria-hidden="true"
+          />
+          <div className="section-label">07 — PARCERIAS &amp; ECOSSISTEMA</div>
+          <div className="partners-heading">
+            <h2>
+              Boas ideias crescem
+              <br />
+              <em>quando encontram companhia.</em>
+            </h2>
+            <span aria-hidden="true">partnership.log</span>
+          </div>
+          <div className="partner-group">
+            <div className="partner-group-head">
+              <span>01</span>
+              <h3>MARCAS &amp; PARCEIROS</h3>
+              <i aria-hidden="true" />
+            </div>
+            <div className="partner-row partner-brands">
+              <figure>
+                <div>
+                  <img
+                    loading="lazy"
+                    src="/logos/CasaDoCodigo.png"
+                    alt="Logo Casa do Código"
+                  />
+                </div>
+                <figcaption>
+                  <b>Casa do Código</b>
+                  <span>parceria</span>
+                </figcaption>
+              </figure>
+              <figure>
+                <div>
+                  <img
+                    loading="lazy"
+                    src="/logos/processadas/hostgator.png"
+                    alt="Logo HostGator"
+                  />
+                </div>
+                <figcaption>
+                  <b>HostGator</b>
+                  <span>parceria</span>
+                </figcaption>
+              </figure>
+              <figure>
+                <div>
+                  <img
+                    loading="lazy"
+                    src="/logos/processadas/estilodeti.png"
+                    alt="Logo Estilo de TI"
+                  />
+                </div>
+                <figcaption>
+                  <b>Estilo de TI</b>
+                  <span>parceria</span>
+                </figcaption>
+              </figure>
+              <figure>
+                <div>
+                  <img
+                    loading="lazy"
+                    src="/logos/processadas/aceleradev.png"
+                    alt="Logo Acelera Dev"
+                  />
+                </div>
+                <figcaption>
+                  <b>Acelera Dev</b>
+                  <span>parceria</span>
+                </figcaption>
+              </figure>
+              <figure>
+                <div>
+                  <img
+                    loading="lazy"
+                    src="/logos/processadas/nexupp.png"
+                    alt="Logo NEXUPP"
+                  />
+                </div>
+                <figcaption>
+                  <b>NEXUPP</b>
+                  <span>parceria</span>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+          <div className="partner-group partner-community">
+            <div className="partner-group-head">
+              <span>02</span>
+              <h3>COMUNIDADES &amp; ECOSSISTEMA</h3>
+              <i aria-hidden="true" />
+            </div>
+            <div className="partner-row partner-communities">
+              <figure>
+                <div>
+                  <img
+                    loading="lazy"
+                    src="/logos/processadas/lamit.png"
+                    alt="Logo LAMIT"
+                  />
+                </div>
+                <figcaption>
+                  <b>LAMIT</b>
+                  <span>ecossistema</span>
+                </figcaption>
+              </figure>
+              <figure>
+                <div>
+                  <img
+                    loading="lazy"
+                    src="/logos/techsisters-oficial-web.png"
+                    alt="Identidade visual oficial da Tech Sisters"
+                  />
+                </div>
+                <figcaption>
+                  <b>Tech Sisters</b>
+                  <span>comunidade</span>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+        <Contact lang={lang} />
+        <Footer />
+      </main>
+    </>
+  );
+}
+function Contact({ lang }: { lang: "pt" | "en" }) {
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [type, setType] = useState("");
+  const [msg, setMsg] = useState("");
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const pt = lang === "pt";
+  const types = pt
+    ? [
+        "Campanha publicitária",
+        "Produção de conteúdo",
+        "UGC",
+        "Cobertura de evento",
+        "Palestra",
+        "Convite para evento",
+        "Embaixadora de marca",
+        "Parceria com a Tech Sisters",
+        "Projeto personalizado",
+      ]
+    : [
+        "Advertising campaign",
+        "Content production",
+        "UGC",
+        "Event coverage",
+        "Talk",
+        "Event invitation",
+        "Brand ambassador",
+        "Tech Sisters partnership",
+        "Custom project",
+      ];
+  const copy = pt
+    ? {
+        name: "Nome",
+        company: "Empresa ou organização",
+        email: "E-mail",
+        type: "Tipo de proposta",
+        message: "Mensagem",
+        namePh: "Como você se chama?",
+        companyPh: "Nome da marca ou organização",
+        emailPh: "voce@empresa.com",
+        typePh: "Selecione uma opção",
+        messagePh: "Conte brevemente sobre a proposta",
+        required: "Campo obrigatório",
+        emailError: "Digite um e-mail válido",
+        emailButton: "PREPARAR E-MAIL",
+        whatsappButton: "ENVIAR POR WHATSAPP",
+      }
+    : {
+        name: "Name",
+        company: "Company or organization",
+        email: "Email",
+        type: "Proposal type",
+        message: "Message",
+        namePh: "What is your name?",
+        companyPh: "Brand or organization name",
+        emailPh: "you@company.com",
+        typePh: "Choose an option",
+        messagePh: "Tell me briefly about your proposal",
+        required: "Required field",
+        emailError: "Enter a valid email",
+        emailButton: "PREPARE EMAIL",
+        whatsappButton: "SEND VIA WHATSAPP",
+      };
+  const validate = () => {
+    const next: Record<string, string> = {};
+    if (!name.trim()) next.name = copy.required;
+    if (!email.trim()) next.email = copy.required;
+    else if (!/^\S+@\S+\.\S+$/.test(email)) next.email = copy.emailError;
+    if (!type) next.type = copy.required;
+    if (!msg.trim()) next.message = copy.required;
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+  const body = () =>
+    encodeURIComponent(
+      `${pt ? "Olá" : "Hello"}, ${pt ? "sou" : "I am"} ${name}${company ? ` — ${company}` : ""}.\n\n${pt ? "Tipo de proposta" : "Proposal type"}: ${type}\nE-mail: ${email}\n\n${msg}`,
+    );
+  const prepareEmail = () => {
+    if (validate())
+      window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(`${pt ? "Proposta de parceria" : "Partnership proposal"} — ${type}`)}&body=${body()}`;
+  };
+  const prepareWhatsapp = () => {
+    if (validate())
+      window.open(
+        `${profile.whatsapp}?text=${body()}`,
+        "_blank",
+        "noopener,noreferrer",
+      );
+  };
+  return (
+    <section id="contato" className="contact">
+      <div className="contact-copy">
+        <div className="section-label">09 — {pt ? "CONTATO" : "CONTACT"}</div>
+        <h2>
+          {pt ? "Vamos criar algo" : "Let’s create something"}
+          <br />
+          <em>{pt ? "que vale a conversa?" : "worth talking about?"}</em>
+        </h2>
+        <p>
+          {pt
+            ? "Campanhas, eventos e projetos que conectam tecnologia, conteúdo e pessoas."
+            : "Campaigns, events and projects connecting technology, content and people."}
+        </p>
+        <div className="contact-direct">
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
+          <a href={profile.whatsapp} target="_blank" rel="noopener noreferrer">
+            +55 75 98834-2908
+          </a>
+        </div>
+        <div className="contact-socials">
+          {socials
+            .filter((s) =>
+              ["Instagram", "TikTok", "LinkedIn", "YouTube"].includes(s[0]),
+            )
+            .map((s) => (
+              <A key={s[0]} href={s[1]}>
+                {s[0]}
+              </A>
+            ))}
+        </div>
+        <img
+          className="contact-cherry"
+          src="/elementos/cereja-dev-annalu-transparente.png"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+      <form noValidate onSubmit={(e) => e.preventDefault()}>
+        <label>
+          {copy.name} *
+          <input
+            value={name}
+            placeholder={copy.namePh}
+            aria-invalid={!!errors.name}
+            onChange={(e) => {
+              setName(e.target.value);
+              setErrors((v) => ({ ...v, name: "" }));
+            }}
+          />
+          {errors.name && <small>{errors.name}</small>}
+        </label>
+        <label>
+          {copy.company}
+          <input
+            value={company}
+            placeholder={copy.companyPh}
+            onChange={(e) => setCompany(e.target.value)}
+          />
+        </label>
+        <label>
+          {copy.email} *
+          <input
+            type="email"
+            value={email}
+            placeholder={copy.emailPh}
+            aria-invalid={!!errors.email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrors((v) => ({ ...v, email: "" }));
+            }}
+          />
+          {errors.email && <small>{errors.email}</small>}
+        </label>
+        <label>
+          {copy.type} *
+          <span className="select-wrap">
+            <select
+              value={type}
+              aria-invalid={!!errors.type}
+              onChange={(e) => {
+                setType(e.target.value);
+                setErrors((v) => ({ ...v, type: "" }));
+              }}
+            >
+              <option value="" disabled>
+                {copy.typePh}
+              </option>
+              {types.map((x) => (
+                <option key={x} value={x}>
+                  {x}
+                </option>
+              ))}
+            </select>
+          </span>
+          {errors.type && <small>{errors.type}</small>}
+        </label>
+        <label>
+          {copy.message} *
+          <textarea
+            value={msg}
+            placeholder={copy.messagePh}
+            aria-invalid={!!errors.message}
+            onChange={(e) => {
+              setMsg(e.target.value);
+              setErrors((v) => ({ ...v, message: "" }));
+            }}
+          />
+          {errors.message && <small>{errors.message}</small>}
+        </label>
+        <div className="formactions">
+          <button
+            className="contact-action"
+            type="button"
+            onClick={prepareEmail}
+          >
+            {copy.emailButton} <ArrowRight />
+          </button>
+          <button
+            className="contact-action"
+            type="button"
+            onClick={prepareWhatsapp}
+          >
+            {copy.whatsappButton} <ArrowRight />
+          </button>
+        </div>
+      </form>
+    </section>
+  );
+}
+function Footer() {
+  const icons = [
+    <Camera />,
+    <Music2 />,
+    <Play />,
+    <BriefcaseBusiness />,
+    <GitFork />,
+  ];
+  return (
+    <footer>
+      <div className="footer-brand">
+        <div>
+          <b>Dev Annalu</b>
+          <img src="/elementos/cerejas.png" alt="Cerejas" />
+        </div>
+        <em>Sua tech bestie.</em>
+        <span>&lt;/&gt;</span>
+      </div>
+      <div className="footer-cta">
+        <h3>Vamos criar juntas?</h3>
+        <a href="mailto:devannalu0@gmail.com">
+          <Mail />
+          devannalu0@gmail.com
+        </a>
+        <A href={profile.whatsapp}>
+          <MessageCircle />
+          WhatsApp
+        </A>
+      </div>
+      <div className="footer-socials" aria-label="Redes sociais">
+        {socials
+          .filter((s) => s[0] !== "Tech Sisters")
+          .map((s, i) => (
+            <A href={s[1]} className="social-icon">
+              <span className="sr-only">{s[0]}</span>
+              {icons[i]}
+            </A>
+          ))}
+      </div>
+      <div className="footer-bottom">
+        <span>Salvador, Bahia · Brasil</span>
+        <span>© 2026 Anna Luiza Cerqueira</span>
+        <a href="#sobre">
+          Voltar ao topo <ArrowUp />
+        </a>
+      </div>
+    </footer>
+  );
+}
