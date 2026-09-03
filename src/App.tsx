@@ -49,20 +49,9 @@ export default function App() {
   const [dragStart, setDragStart] = useState<number | null>(null);
   const [activeNav, setActiveNav] = useState("sobre");
   const openingRef = useRef<HTMLElement>(null);
-  const workRef = useRef<HTMLElement>(null);
   const t = i18n[lang];
   const selectContent = (index: number) => {
     const next = (index + projects.length) % projects.length;
-    const node = workRef.current;
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (node && innerWidth > 800 && !reduced) {
-      const total = node.offsetHeight - innerHeight;
-      scrollTo({
-        top: node.offsetTop + (next / (projects.length - 1)) * total,
-        behavior: "smooth",
-      });
-      return;
-    }
     setActive(next);
   };
   const move = (dir: number) => selectContent(active + dir);
@@ -78,37 +67,6 @@ export default function App() {
       .querySelectorAll("section[id]")
       .forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, []);
-  useEffect(() => {
-    const node = workRef.current;
-    if (!node) return;
-    let frame = 0;
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const update = () => {
-      frame = 0;
-      if (reduced || innerWidth <= 800) return;
-      const total = node.offsetHeight - innerHeight;
-      const progress = Math.min(
-        1,
-        Math.max(0, (scrollY - node.offsetTop) / Math.max(total, 1)),
-      );
-      const next = Math.min(
-        projects.length - 1,
-        Math.floor(progress * projects.length),
-      );
-      setActive((current) => (current === next ? current : next));
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    update();
-    addEventListener("scroll", onScroll, { passive: true });
-    addEventListener("resize", onScroll);
-    return () => {
-      removeEventListener("scroll", onScroll);
-      removeEventListener("resize", onScroll);
-      if (frame) cancelAnimationFrame(frame);
-    };
   }, []);
   useEffect(() => {
     setIsTransitioning(true);
@@ -438,7 +396,7 @@ export default function App() {
             </p>
           </div>
         </section>
-        <section id="trabalhos" className="work" ref={workRef}>
+        <section id="trabalhos" className="work">
           <div className="work-sticky">
             <div className="section-label">03 — CONTEÚDO</div>
             <div className="workhead">
@@ -447,6 +405,10 @@ export default function App() {
                 <br />
                 <em>experiências em histórias.</em>
               </h2>
+              <span className="counter">
+                {String(active + 1).padStart(2, "0")} /{" "}
+                {String(projects.length).padStart(2, "0")}
+              </span>
             </div>
             <div
               className="video-stage"
@@ -520,16 +482,12 @@ export default function App() {
               </button>
             </div>
             <div className="active-meta" aria-live="polite" key={active}>
-              <span className="counter">
-                {String(active + 1).padStart(2, "0")} /{" "}
-                {String(projects.length).padStart(2, "0")}
-              </span>
               <div>
                 <h3>{projects[active].title}</h3>
                 <p>{projects[active].cat}</p>
               </div>
               <A className="reel-cta" href={projects[active].url}>
-                ASSISTIR AO CONTEÚDO <ArrowRight />
+                Assistir ao conteúdo completo ↗
               </A>
             </div>
           </div>
