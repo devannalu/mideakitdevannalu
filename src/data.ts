@@ -1,4 +1,4 @@
-export const profile={name:'Dev Annalu',fullName:'Anna Luiza Cerqueira',role:'Software Engineer · Content Creator · Community Builder',location:'Salvador, Bahia',age:22,email:'devannalu0@gmail.com',whatsapp:'https://wa.me/5575988342908'};
+export const profile={name:'Dev Annalu',fullName:'Anna Luiza Cerqueira',role:'Software Engineer · Content Creator · Community Builder',location:'Salvador, Bahia',age:22,email:'devannalu0@gmail.com'};
 export const metrics=[['1.030','seguidores'],['+18,9%','crescimento'],['89.237','visualizações'],['2.647','interações'],['8.047','contas alcançadas'],['67,7%','não seguidores']];
 export const socials=[['Instagram','https://www.instagram.com/dev.annalu/'],['TikTok','https://www.tiktok.com/@dev.annalu'],['YouTube','https://www.youtube.com/@Dev.annalu'],['LinkedIn','https://www.linkedin.com/in/devannalu/'],['GitHub','https://github.com/devannalu'],['Tech Sisters','https://www.instagram.com/tech.sisterss/']];
 export const projects=[

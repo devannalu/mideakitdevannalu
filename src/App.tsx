@@ -13,7 +13,6 @@ import {
   GitFork,
   Mail,
   Menu,
-  MessageCircle,
   Music,
   Music2,
   Play,
@@ -801,10 +800,12 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
         emailPh: "voce@empresa.com",
         typePh: "Selecione uma opção",
         messagePh: "Conte brevemente sobre a proposta",
-        required: "Campo obrigatório",
-        emailError: "Digite um e-mail válido",
+        nameError: "Informe seu nome.",
+        emailRequired: "Informe seu e-mail.",
+        emailError: "Informe um e-mail válido.",
+        typeError: "Selecione o tipo de proposta.",
+        messageError: "Escreva uma mensagem.",
         emailButton: "PREPARAR E-MAIL",
-        whatsappButton: "ENVIAR POR WHATSAPP",
       }
     : {
         name: "Name",
@@ -817,10 +818,12 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
         emailPh: "you@company.com",
         typePh: "Choose an option",
         messagePh: "Tell me briefly about your proposal",
-        required: "Required field",
-        emailError: "Enter a valid email",
+        nameError: "Please enter your name.",
+        emailRequired: "Please enter your email.",
+        emailError: "Please enter a valid email.",
+        typeError: "Please select a proposal type.",
+        messageError: "Please write a message.",
         emailButton: "PREPARE EMAIL",
-        whatsappButton: "SEND VIA WHATSAPP",
       };
   useEffect(() => {
     const closeOutside = (event: PointerEvent) => {
@@ -858,29 +861,37 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
   };
   const validate = () => {
     const next: Record<string, string> = {};
-    if (!name.trim()) next.name = copy.required;
-    if (!email.trim()) next.email = copy.required;
-    else if (!/^\S+@\S+\.\S+$/.test(email)) next.email = copy.emailError;
-    if (!type) next.type = copy.required;
-    if (!msg.trim()) next.message = copy.required;
+    if (!name.trim()) next.name = copy.nameError;
+    if (!email.trim()) next.email = copy.emailRequired;
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = copy.emailError;
+    if (!type) next.type = copy.typeError;
+    if (!msg.trim()) next.message = copy.messageError;
     setErrors(next);
-    return Object.keys(next).length === 0;
+    return next;
   };
-  const body = () =>
-    encodeURIComponent(
-      `${pt ? "Olá" : "Hello"}, ${pt ? "sou" : "I am"} ${name}${company ? ` — ${company}` : ""}.\n\n${pt ? "Tipo de proposta" : "Proposal type"}: ${type}\nE-mail: ${email}\n\n${msg}`,
-    );
   const prepareEmail = () => {
-    if (validate())
-      window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(`${pt ? "Proposta de parceria" : "Partnership proposal"} — ${type}`)}&body=${body()}`;
-  };
-  const prepareWhatsapp = () => {
-    if (validate())
-      window.open(
-        `${profile.whatsapp}?text=${body()}`,
-        "_blank",
-        "noopener,noreferrer",
-      );
+    const validationErrors = validate();
+    const firstInvalidField = Object.keys(validationErrors)[0];
+    if (firstInvalidField) {
+      requestAnimationFrame(() => {
+        const element = document.querySelector<
+          HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >(`[name="${firstInvalidField}"]`);
+        element?.focus();
+      });
+      return;
+    }
+    const subject = encodeURIComponent(
+      `Proposta comercial - ${type}`,
+    );
+    const body = encodeURIComponent(
+      `Olá, Anna Luiza!\n\nNome: ${name}\nEmpresa/Organização: ${company || "Não informado"}\nE-mail: ${email}\nTipo de proposta: ${type}\n\nMensagem:\n${msg}`,
+    );
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1`
+      + `&to=${encodeURIComponent("devannalu0@gmail.com")}`
+      + `&su=${subject}`
+      + `&body=${body}`;
+    window.open(gmailUrl, "_blank", "noopener,noreferrer");
   };
   return (
     <section id="contato" className="contact">
@@ -898,9 +909,6 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
         </p>
         <div className="contact-direct">
           <a href={`mailto:${profile.email}`}>{profile.email}</a>
-          <a href={profile.whatsapp} target="_blank" rel="noopener noreferrer">
-            +55 75 98834-2908
-          </a>
         </div>
         <div className="contact-socials">
           {socials
@@ -924,6 +932,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
         <label>
           {copy.name} *
           <input
+            name="name"
             value={name}
             placeholder={copy.namePh}
             aria-invalid={!!errors.name}
@@ -937,6 +946,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
         <label>
           {copy.company}
           <input
+            name="company"
             value={company}
             placeholder={copy.companyPh}
             onChange={(e) => setCompany(e.target.value)}
@@ -946,6 +956,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
           {copy.email} *
           <input
             type="email"
+            name="email"
             value={email}
             placeholder={copy.emailPh}
             aria-invalid={!!errors.email}
@@ -963,6 +974,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
               ref={typeButtonRef}
               className="proposal-trigger"
               type="button"
+              name="type"
               aria-haspopup="listbox"
               aria-expanded={typeOpen}
               aria-controls="proposal-options"
@@ -1012,6 +1024,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
         <label>
           {copy.message} *
           <textarea
+            name="message"
             value={msg}
             placeholder={copy.messagePh}
             aria-invalid={!!errors.message}
@@ -1029,13 +1042,6 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
             onClick={prepareEmail}
           >
             {copy.emailButton} <ArrowRight />
-          </button>
-          <button
-            className="contact-action"
-            type="button"
-            onClick={prepareWhatsapp}
-          >
-            {copy.whatsappButton} <ArrowRight />
           </button>
         </div>
       </form>
@@ -1066,10 +1072,6 @@ function Footer() {
           <Mail />
           devannalu0@gmail.com
         </a>
-        <A href={profile.whatsapp}>
-          <MessageCircle />
-          WhatsApp
-        </A>
       </div>
       <div className="footer-socials" aria-label="Redes sociais">
         {socials

@@ -1,4 +1,14 @@
 node_modules/
 dist/
+build/
 tmp/
 *.tsbuildinfo
+.env
+.env.*
+.DS_Store
+*.log
+.vscode/
+.idea/
+*.tar.gz
+.openai/
+.site-stage/
