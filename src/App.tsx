@@ -47,7 +47,9 @@ export default function App() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [dragStart, setDragStart] = useState<number | null>(null);
   const [activeNav, setActiveNav] = useState("sobre");
+  const [favorite, setFavorite] = useState<"music" | "book" | "series" | null>(null);
   const openingRef = useRef<HTMLElement>(null);
+  const favoritesRef = useRef<HTMLElement>(null);
   const t = i18n[lang];
   const selectContent = (index: number) => {
     const next = (index + projects.length) % projects.length;
@@ -57,6 +59,20 @@ export default function App() {
   useEffect(() => {
     document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
   }, [lang]);
+  useEffect(() => {
+    const closeFavorite = (event: PointerEvent) => {
+      if (!favoritesRef.current?.contains(event.target as Node)) setFavorite(null);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setFavorite(null);
+    };
+    document.addEventListener("pointerdown", closeFavorite);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeFavorite);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (es) => es.forEach((e) => e.isIntersecting && setActiveNav(e.target.id)),
@@ -169,23 +185,31 @@ export default function App() {
                     {t.work} <ArrowDown />
                   </a>
                 </div>
-                <figure className="hero-media">
+                <figure className="hero-media" ref={favoritesRef}>
                   <div className="hero-photo hero-cutout">
                     <img
                       src="/assets/annalu-hero-cutout-v2.png"
                       alt="Dev Annalu"
                     />
                   </div>
-                  <div className="personal-notes">
-                    <span>
+                  {favorite && (
+                    <aside className="favorite-panel" aria-live="polite">
+                      <button type="button" className="favorite-close" onClick={() => setFavorite(null)} aria-label="Fechar favorito">×</button>
+                      {favorite === "music" && <><small>01 — NOW PLAYING</small><h3>4Tspoon</h3><p>Playboi Carti feat. Yung Bans</p><iframe src="https://open.spotify.com/embed/track/45nws9GcCPP4D1n9hJ6Ytq" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="4Tspoon — Playboi Carti feat. Yung Bans" /></>}
+                      {favorite === "book" && <><small>02 — ON MY SHELF</small><h3>Como eu era antes de você</h3><p>Jojo Moyes · Romance</p><a href="https://loja.intrinseca.com.br/como-eu-era-antes-de-voce/" target="_blank" rel="noopener noreferrer">CONHECER O LIVRO ↗</a></>}
+                      {favorite === "series" && <><small>03 — CURRENT FAVORITE</small><h3>One Tree Hill: Lances da Vida</h3><p>Drama · 9 temporadas</p><a href="https://www.netflix.com/br/title/70155592" target="_blank" rel="noopener noreferrer">CONHECER A SÉRIE ↗</a></>}
+                    </aside>
+                  )}
+                  <div className="personal-notes" aria-label="Favoritos da Annalu">
+                    <button type="button" aria-expanded={favorite === "music"} onClick={() => setFavorite(favorite === "music" ? null : "music")}>
                       <Music /> música
-                    </span>
-                    <span>
+                    </button>
+                    <button type="button" aria-expanded={favorite === "book"} onClick={() => setFavorite(favorite === "book" ? null : "book")}>
                       <BookOpen /> livros
-                    </span>
-                    <span>
+                    </button>
+                    <button type="button" aria-expanded={favorite === "series"} onClick={() => setFavorite(favorite === "series" ? null : "series")}>
                       <Tv /> séries
-                    </span>
+                    </button>
                   </div>
                 </figure>
                 <div className="hero-tech" aria-hidden="true">
@@ -752,6 +776,27 @@ export default function App() {
     </>
   );
 }
+type ContactFormData = {
+  name: string;
+  company: string;
+  email: string;
+  proposalType: string;
+  message: string;
+};
+
+const COMMERCIAL_EMAIL = "devannalu0@gmail.com";
+const WHATSAPP_NUMBER = "5575988342908";
+
+function validateContactForm(data: ContactFormData) {
+  const errors: Partial<Record<keyof ContactFormData, string>> = {};
+  if (!data.name.trim()) errors.name = "Informe seu nome.";
+  if (!data.email.trim()) errors.email = "Informe seu e-mail.";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) errors.email = "Informe um e-mail válido.";
+  if (!data.proposalType.trim()) errors.proposalType = "Selecione o tipo de proposta.";
+  if (!data.message.trim()) errors.message = "Escreva uma mensagem.";
+  return errors;
+}
+
 function Contact({ lang }: { lang: "pt" | "en" }) {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
@@ -760,7 +805,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
   const [typeOpen, setTypeOpen] = useState(false);
   const [typeHighlight, setTypeHighlight] = useState(0);
   const [msg, setMsg] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
   const typeWrapRef = useRef<HTMLSpanElement>(null);
   const typeButtonRef = useRef<HTMLButtonElement>(null);
   const pt = lang === "pt";
@@ -836,7 +881,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
     setTypeIndex(index);
     setTypeHighlight(index);
     setTypeOpen(false);
-    setErrors((value) => ({ ...value, type: "" }));
+    setErrors((value) => ({ ...value, proposalType: "" }));
     requestAnimationFrame(() => typeButtonRef.current?.focus());
   };
   const handleTypeKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -859,39 +904,31 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
       chooseType(typeHighlight);
     }
   };
-  const validate = () => {
-    const next: Record<string, string> = {};
-    if (!name.trim()) next.name = copy.nameError;
-    if (!email.trim()) next.email = copy.emailRequired;
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = copy.emailError;
-    if (!type) next.type = copy.typeError;
-    if (!msg.trim()) next.message = copy.messageError;
-    setErrors(next);
-    return next;
-  };
-  const prepareEmail = () => {
-    const validationErrors = validate();
-    const firstInvalidField = Object.keys(validationErrors)[0];
+  const getValidatedData = () => {
+    const data: ContactFormData = { name, company, email, proposalType: type, message: msg };
+    const validationErrors = validateContactForm(data);
+    setErrors(validationErrors);
+    const order: (keyof ContactFormData)[] = ["name", "email", "proposalType", "message"];
+    const firstInvalidField = order.find((field) => validationErrors[field]);
     if (firstInvalidField) {
       requestAnimationFrame(() => {
-        const element = document.querySelector<
-          HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-        >(`[name="${firstInvalidField}"]`);
-        element?.focus();
+        if (firstInvalidField === "proposalType") typeButtonRef.current?.focus();
+        else document.querySelector<HTMLInputElement | HTMLTextAreaElement>(`[name="${firstInvalidField}"]`)?.focus();
       });
-      return;
+      return null;
     }
-    const subject = encodeURIComponent(
-      `Proposta comercial - ${type}`,
-    );
-    const body = encodeURIComponent(
-      `Olá, Anna Luiza!\n\nNome: ${name}\nEmpresa/Organização: ${company || "Não informado"}\nE-mail: ${email}\nTipo de proposta: ${type}\n\nMensagem:\n${msg}`,
-    );
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1`
-      + `&to=${encodeURIComponent("devannalu0@gmail.com")}`
-      + `&su=${subject}`
-      + `&body=${body}`;
-    window.open(gmailUrl, "_blank", "noopener,noreferrer");
+    return data;
+  };
+  const buildMessage = (data: ContactFormData) => `Olá, Anna Luiza!\n\nNome: ${data.name.trim()}\nEmpresa/Organização: ${data.company.trim() || "Não informado"}\nE-mail: ${data.email.trim()}\nTipo de proposta: ${data.proposalType}\n\nMensagem:\n${data.message.trim()}`;
+  const prepareEmail = () => {
+    const data = getValidatedData();
+    if (!data) return;
+    window.location.href = `mailto:${COMMERCIAL_EMAIL}?subject=${encodeURIComponent(`Proposta comercial - ${data.proposalType}`)}&body=${encodeURIComponent(buildMessage(data))}`;
+  };
+  const prepareWhatsApp = () => {
+    const data = getValidatedData();
+    if (!data) return;
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildMessage(data))}`, "_blank", "noopener,noreferrer");
   };
   return (
     <section id="contato" className="contact">
@@ -981,7 +1018,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
               aria-activedescendant={
                 typeOpen ? `proposal-option-${typeHighlight}` : undefined
               }
-              aria-invalid={!!errors.type}
+              aria-invalid={!!errors.proposalType}
               onClick={() => {
                 setTypeHighlight(typeIndex ?? 0);
                 setTypeOpen((open) => !open);
@@ -1019,7 +1056,7 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
               </span>
             )}
           </span>
-          {errors.type && <small>{errors.type}</small>}
+          {errors.proposalType && <small>{errors.proposalType}</small>}
         </label>
         <label>
           {copy.message} *
@@ -1042,6 +1079,9 @@ function Contact({ lang }: { lang: "pt" | "en" }) {
             onClick={prepareEmail}
           >
             {copy.emailButton} <ArrowRight />
+          </button>
+          <button className="contact-action" type="button" onClick={prepareWhatsApp}>
+            {pt ? "ENVIAR POR WHATSAPP" : "SEND VIA WHATSAPP"} <ArrowRight />
           </button>
         </div>
       </form>
