@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Italiana&display=swap');
 :root{--ink:#1E100F;--cream:#F6F3E4;--wine:#30050E;--bordo:#4D0C12;--bg:var(--cream);--fg:var(--ink);--line:rgba(30,16,15,.24);font-family:'DM Sans',sans-serif;color:var(--fg);background:var(--bg);font-synthesis:none}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;overflow-x:hidden}
+html{scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar{display:none}
+body{margin:0;overflow-x:hidden;scrollbar-width:none;-ms-overflow-style:none}
+body::-webkit-scrollbar{display:none}
 button,input,select,textarea{font:inherit}
 button,a{color:inherit}
 a{text-decoration:none}
