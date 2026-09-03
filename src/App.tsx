@@ -486,7 +486,7 @@ export default function App() {
                         (central
                           ? "active"
                           : Math.abs(d) === 1
-                            ? "neighbor"
+                            ? `neighbor ${d < 0 ? "side-prev" : "side-next"}`
                             : "hidden")
                       }
                       style={{ "--offset": d } as React.CSSProperties}
