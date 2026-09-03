@@ -639,6 +639,13 @@ export default function App() {
             </div>
             <div className="partner-row partner-brands">
               <figure>
+                <a
+                  className="partner-hit"
+                  href="https://www.casadocodigo.com.br/?cupom=AF-c7etfetb"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visitar Casa do Código"
+                />
                 <div>
                   <img
                     loading="lazy"
@@ -652,6 +659,13 @@ export default function App() {
                 </figcaption>
               </figure>
               <figure>
+                <a
+                  className="partner-hit"
+                  href="https://www.hostgator.com.br/53110.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visitar HostGator"
+                />
                 <div>
                   <img
                     loading="lazy"
@@ -665,6 +679,13 @@ export default function App() {
                 </figcaption>
               </figure>
               <figure>
+                <a
+                  className="partner-hit"
+                  href="https://estilodeti.com.br/aff/17/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visitar Estilo de TI"
+                />
                 <div>
                   <img
                     loading="lazy"
@@ -678,6 +699,13 @@ export default function App() {
                 </figcaption>
               </figure>
               <figure>
+                <a
+                  className="partner-hit"
+                  href="https://kiwify.app/fA1ptTF?afid=qVT2tcEa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visitar Acelera Dev"
+                />
                 <div>
                   <img
                     loading="lazy"
@@ -691,6 +719,13 @@ export default function App() {
                 </figcaption>
               </figure>
               <figure>
+                <a
+                  className="partner-hit"
+                  href="https://www.instagram.com/nex.upp/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visitar NEXUPP no Instagram"
+                />
                 <div>
                   <img
                     loading="lazy"
@@ -713,6 +748,13 @@ export default function App() {
             </div>
             <div className="partner-row partner-communities">
               <figure>
+                <a
+                  className="partner-hit"
+                  href="https://www.instagram.com/lamit.ucsal/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visitar LAMIT no Instagram"
+                />
                 <div>
                   <img
                     loading="lazy"
@@ -726,11 +768,18 @@ export default function App() {
                 </figcaption>
               </figure>
               <figure>
+                <a
+                  className="partner-hit"
+                  href="https://www.instagram.com/tech.sisterss/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visitar Tech Sisters no Instagram"
+                />
                 <div>
                   <img
                     loading="lazy"
                     src="/logos/techsisters-oficial-web.png"
-                    alt="Identidade visual oficial da Tech Sisters"
+                    alt="Logo Tech Sisters"
                   />
                 </div>
                 <figcaption>
