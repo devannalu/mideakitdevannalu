@@ -219,7 +219,6 @@ export default function App() {
                       alt="Dev Annalu"
                     />
                   </div>
-                  <figcaption>SUA TECH BESTIE · SALVADOR, BAHIA</figcaption>
                   <div className="personal-notes">
                     <span>
                       <Music /> música
