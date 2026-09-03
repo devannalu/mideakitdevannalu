@@ -692,3 +692,30 @@ to{opacity:1;transform:translateY(0)}
   .work-sticky{position:relative;top:auto;height:auto;min-height:calc(100vh - 70px)}
   .video-card,.active-meta,.stage-arrow{transition:none;animation:none}
 }
+
+/* Viewport containment — the portrait and vertical caption stay inside the hero. */
+*,
+*::before,
+*::after{box-sizing:border-box}
+html,
+body,
+#root{width:100%;max-width:100%;margin:0}
+html,
+body{overflow-x:clip}
+.opening,
+.opening-sticky,
+.opening .hero,
+.opening .hero-grid{width:100%;max-width:100%}
+.opening .hero:after{right:0;max-width:100%}
+.hero-watermark{left:0;max-width:100%}
+.hero-media{min-width:0;max-width:100%;padding-right:32px}
+.hero-media .hero-cutout{right:12px;width:calc(100% - 24px);max-width:700px}
+.hero-media figcaption{position:absolute;right:16px;top:50%;bottom:auto;width:auto;min-width:0;max-width:none;padding:0;margin:0;writing-mode:vertical-rl;transform:translateY(-50%);white-space:nowrap}
+
+@media(max-width:800px){
+  .opening .hero:after{right:0;width:100%;max-width:100%}
+  .hero-watermark{left:0;width:100%;max-width:100%}
+  .hero-media{padding-right:20px}
+  .hero-media .hero-cutout{right:10px;width:calc(100% - 20px)}
+  .hero-media figcaption{right:16px;top:50%;display:block;font-size:.48rem}
+}
