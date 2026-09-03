@@ -3,9 +3,9 @@ export const metrics=[['1.030','seguidores'],['+18,9%','crescimento'],['89.237',
 export const socials=[['Instagram','https://www.instagram.com/dev.annalu/'],['TikTok','https://www.tiktok.com/@dev.annalu'],['YouTube','https://www.youtube.com/@Dev.annalu'],['LinkedIn','https://www.linkedin.com/in/devannalu/'],['GitHub','https://github.com/devannalu'],['Tech Sisters','https://www.instagram.com/tech.sisterss/']];
 export const projects=[
  {title:'Os melhores eventos tech da Bahia',cat:'EVENTOS TECH',cover:'/capas-previas/osmelhoresevntostechba.png',url:'https://www.instagram.com/reel/DcCg59lOKnk/'},
- {title:'Build With AI — GDG Lauro de Freitas',cat:'TECNOLOGIA & IA',cover:'/capas-previas/buildwithAI_gdglauro.png',url:'https://www.instagram.com/reel/DXm-gD2iTSY/'},
+ {title:'Build with AI — GDG Lauro de Freitas',cat:'TECNOLOGIA & IA',cover:'/capas-previas/buildwithAI_gdglauro.png',url:'https://www.instagram.com/reel/DXm-gD2iTSY/'},
  {title:'Vivendo a experiência Codecon',cat:'EVENTOS TECH',cover:'/capas-previas/eventocodecon.png',url:'https://www.instagram.com/reel/Dba1kEAOCv2/'},
- {title:'Imersão LAMIT 2026',cat:'COMUNIDADE & TECNOLOGIA',cover:'/capas-previas/imersaolamit.png',url:'https://www.instagram.com/reel/DarMKuSu8Gn/'},
+ {title:'Imersão LAMIT',cat:'COMUNIDADE & TECNOLOGIA',cover:'/capas-previas/imersaolamit.png',url:'https://www.instagram.com/reel/DarMKuSu8Gn/'},
  {title:'Conteúdo com a Casa do Código',cat:'LIVROS & TECNOLOGIA',cover:'/capas-previas/publicasadocodigo.png',url:'https://www.instagram.com/reel/DbJ-TNcOBNL/'},
  {title:'Experiência na SEMCOMP SSA',cat:'COBERTURA DE EVENTO',cover:'/capas-previas/semcompSSA.png',url:'https://www.instagram.com/reel/DcghZQMOxfR/'},
 ];

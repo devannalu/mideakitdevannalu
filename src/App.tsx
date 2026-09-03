@@ -45,12 +45,27 @@ export default function App() {
   const [lang, setLang] = useState<"pt" | "en">("pt");
   const [menu, setMenu] = useState(false);
   const [active, setActive] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [dragStart, setDragStart] = useState<number | null>(null);
   const [activeNav, setActiveNav] = useState("sobre");
   const openingRef = useRef<HTMLElement>(null);
+  const workRef = useRef<HTMLElement>(null);
   const t = i18n[lang];
-  const move = (dir: number) =>
-    setActive((i) => (i + dir + projects.length) % projects.length);
+  const selectContent = (index: number) => {
+    const next = (index + projects.length) % projects.length;
+    const node = workRef.current;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (node && innerWidth > 800 && !reduced) {
+      const total = node.offsetHeight - innerHeight;
+      scrollTo({
+        top: node.offsetTop + (next / (projects.length - 1)) * total,
+        behavior: "smooth",
+      });
+      return;
+    }
+    setActive(next);
+  };
+  const move = (dir: number) => selectContent(active + dir);
   useEffect(() => {
     document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
   }, [lang]);
@@ -64,6 +79,42 @@ export default function App() {
       .forEach((s) => observer.observe(s));
     return () => observer.disconnect();
   }, []);
+  useEffect(() => {
+    const node = workRef.current;
+    if (!node) return;
+    let frame = 0;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const update = () => {
+      frame = 0;
+      if (reduced || innerWidth <= 800) return;
+      const total = node.offsetHeight - innerHeight;
+      const progress = Math.min(
+        1,
+        Math.max(0, (scrollY - node.offsetTop) / Math.max(total, 1)),
+      );
+      const next = Math.min(
+        projects.length - 1,
+        Math.floor(progress * projects.length),
+      );
+      setActive((current) => (current === next ? current : next));
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
+    return () => {
+      removeEventListener("scroll", onScroll);
+      removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+  useEffect(() => {
+    setIsTransitioning(true);
+    const timer = window.setTimeout(() => setIsTransitioning(false), 480);
+    return () => window.clearTimeout(timer);
+  }, [active]);
   useEffect(() => {
     const node = openingRef.current;
     if (!node) return;
@@ -388,104 +439,100 @@ export default function App() {
             </p>
           </div>
         </section>
-        <section id="trabalhos" className="work">
-          <div className="section-label">05 — Trabalhos selecionados</div>
-          <div className="workhead">
-            <div>
+        <section id="trabalhos" className="work" ref={workRef}>
+          <div className="work-sticky">
+            <div className="section-label">03 — CONTEÚDO</div>
+            <div className="workhead">
               <h2>
                 Conteúdo que transforma
                 <br />
                 <em>experiências em histórias.</em>
               </h2>
-              <p>
-                Explore alguns dos conteúdos, eventos e projetos que já ganharam
-                vida.
-              </p>
             </div>
-            <span className="counter">
-              {String(active + 1).padStart(2, "0")} /{" "}
-              {String(projects.length).padStart(2, "0")}
-            </span>
-          </div>
-          <div
-            className="video-stage"
-            role="region"
-            aria-label="Carrossel de conteúdos"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "ArrowLeft") move(-1);
-              if (e.key === "ArrowRight") move(1);
-            }}
-            onPointerDown={(e) => setDragStart(e.clientX)}
-            onPointerUp={(e) => {
-              if (dragStart !== null && Math.abs(e.clientX - dragStart) > 45)
-                move(e.clientX < dragStart ? 1 : -1);
-              setDragStart(null);
-            }}
-          >
-            <button
-              className="stage-arrow prev"
-              onClick={() => move(-1)}
-              aria-label="Conteúdo anterior"
+            <div
+              className="video-stage"
+              role="region"
+              aria-label="Carrossel de conteúdos"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "ArrowLeft") move(-1);
+                if (e.key === "ArrowRight") move(1);
+              }}
+              onPointerDown={(e) => setDragStart(e.clientX)}
+              onPointerUp={(e) => {
+                if (dragStart !== null && Math.abs(e.clientX - dragStart) > 45)
+                  move(e.clientX < dragStart ? 1 : -1);
+                setDragStart(null);
+              }}
             >
-              <ArrowLeft />
-            </button>
-            <div className="card-deck">
-              {projects.map((p, i) => {
-                let d = i - active;
-                if (d > projects.length / 2) d -= projects.length;
-                if (d < -projects.length / 2) d += projects.length;
-                const central = d === 0;
-                return (
-                  <article
-                    className={
-                      "video-card " +
-                      (central
-                        ? "active"
-                        : Math.abs(d) === 1
-                          ? "neighbor"
-                          : "hidden")
-                    }
-                    style={{ "--offset": d } as React.CSSProperties}
-                    aria-hidden={Math.abs(d) > 1}
-                    key={p.url}
-                  >
-                    <button
-                      className="reel-cover"
-                      onClick={() =>
-                        central
-                          ? window.open(p.url, "_blank", "noopener,noreferrer")
-                          : setActive(i)
+              <button
+                className="stage-arrow prev"
+                onClick={() => move(-1)}
+                disabled={isTransitioning}
+                aria-label="Conteúdo anterior"
+              >
+                <ArrowLeft />
+              </button>
+              <div className="card-deck">
+                {projects.map((p, i) => {
+                  let d = i - active;
+                  if (d > projects.length / 2) d -= projects.length;
+                  if (d < -projects.length / 2) d += projects.length;
+                  const central = d === 0;
+                  return (
+                    <article
+                      className={
+                        "video-card " +
+                        (central
+                          ? "active"
+                          : Math.abs(d) === 1
+                            ? "neighbor"
+                            : "hidden")
                       }
-                      tabIndex={Math.abs(d) <= 1 ? 0 : -1}
-                      aria-label={
-                        central ? `Abrir ${p.title}` : `Selecionar ${p.title}`
-                      }
+                      style={{ "--offset": d } as React.CSSProperties}
+                      aria-hidden={Math.abs(d) > 1}
+                      key={p.url}
                     >
-                      <img src={p.cover} alt={`Capa de ${p.title}`} />
-                    </button>
-                  </article>
-                );
-              })}
+                      <button
+                        className="reel-cover"
+                        onClick={() =>
+                          central
+                            ? window.open(p.url, "_blank", "noopener,noreferrer")
+                            : selectContent(i)
+                        }
+                        tabIndex={Math.abs(d) <= 1 ? 0 : -1}
+                        aria-label={
+                          central ? `Abrir ${p.title}` : `Selecionar ${p.title}`
+                        }
+                      >
+                        <img src={p.cover} alt={`Capa de ${p.title}`} />
+                      </button>
+                    </article>
+                  );
+                })}
+              </div>
+              <button
+                className="stage-arrow next"
+                onClick={() => move(1)}
+                disabled={isTransitioning}
+                aria-label="Próximo conteúdo"
+              >
+                <ArrowRight />
+              </button>
             </div>
-            <button
-              className="stage-arrow next"
-              onClick={() => move(1)}
-              aria-label="Próximo conteúdo"
-            >
-              <ArrowRight />
-            </button>
-          </div>
-          <div className="active-meta" aria-live="polite">
-            <div>
-              <h3>{projects[active].title}</h3>
-              <p>
-                {String(active + 1).padStart(2, "0")} — {projects[active].cat}
-              </p>
+            <div className="active-meta" aria-live="polite" key={active}>
+              <span className="counter">
+                {String(active + 1).padStart(2, "0")} /{" "}
+                {String(projects.length).padStart(2, "0")}
+              </span>
+              <div>
+                <h3>{projects[active].title}</h3>
+                <p>{projects[active].cat}</p>
+              </div>
+              <A className="reel-cta" href={projects[active].url}>
+                ASSISTIR AO CONTEÚDO <ArrowRight />
+              </A>
             </div>
-            <A className="reel-cta" href={projects[active].url}>
-              Assistir ao conteúdo completo <ArrowRight />
-            </A>
           </div>
         </section>
         <section id="parcerias" className="partnerships">
